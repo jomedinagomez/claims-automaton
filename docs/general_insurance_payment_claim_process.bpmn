@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_mUUx4KbeED6oT9FF3i70Ag" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_ClaimsOfficerReview_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_SkippableInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_PriorityInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_CommentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_DescriptionInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_CreatedByInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_TaskNameInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_GroupIdInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_ContentInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_NotStartedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_NotCompletedReassignInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_NotStartedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="_Task_CustomerProvideInfo_NotCompletedNotifyInputXItem" structureRef="Object"/>
+  <bpmn2:itemDefinition id="Claim AcknowledgmentType" structureRef=""/>
+  <bpmn2:message id="_mUWAAKbeED6oT9FF3i70Ag" itemRef="Claim AcknowledgmentType" name="Claim Acknowledgment"/>
+  <bpmn2:collaboration id="_924D0DA9-C061-4437-88E0-9E73D36CFF8E" name="Default Collaboration">
+    <bpmn2:participant id="_93A1BB92-49A6-4EC8-932B-95C31FDAB136" name="Pool Participant" processRef="general_insurance_payment_claim_process"/>
+  </bpmn2:collaboration>
+  <bpmn2:process id="general_insurance_payment_claim_process" drools:packageName="com.example" drools:version="1.0" drools:adHoc="false" name="general_insurance_payment_claim_process" processType="Public">
+    <bpmn2:sequenceFlow id="Flow_Start_To_Review" sourceRef="StartEvent_RequestClaim" targetRef="Task_ReviewRequest"/>
+    <bpmn2:sequenceFlow id="Flow_Review_To_Record" sourceRef="Task_ReviewRequest" targetRef="Task_RecordInformation"/>
+    <bpmn2:sequenceFlow id="Flow_Record_To_Ack" sourceRef="Task_RecordInformation" targetRef="Event_AcknowledgeReceipt"/>
+    <bpmn2:sequenceFlow id="Flow_Ack_To_DataSplit" sourceRef="Event_AcknowledgeReceipt" targetRef="Gateway_DataPrepSplit"/>
+    <bpmn2:sequenceFlow id="Flow_Split_To_Validate" sourceRef="Gateway_DataPrepSplit" targetRef="Task_ValidateDocuments"/>
+    <bpmn2:sequenceFlow id="Flow_Split_To_Policy" sourceRef="Gateway_DataPrepSplit" targetRef="Task_CheckPolicyCoverage"/>
+    <bpmn2:sequenceFlow id="Flow_Split_To_History" sourceRef="Gateway_DataPrepSplit" targetRef="Task_CheckClaimsHistory"/>
+    <bpmn2:sequenceFlow id="Flow_Split_To_External" sourceRef="Gateway_DataPrepSplit" targetRef="Task_CheckExternalSignals"/>
+    <bpmn2:sequenceFlow id="Flow_Validate_To_Join" sourceRef="Task_ValidateDocuments" targetRef="Gateway_DataPrepJoin"/>
+    <bpmn2:sequenceFlow id="Flow_Policy_To_Join" sourceRef="Task_CheckPolicyCoverage" targetRef="Gateway_DataPrepJoin"/>
+    <bpmn2:sequenceFlow id="Flow_History_To_Join" sourceRef="Task_CheckClaimsHistory" targetRef="Gateway_DataPrepJoin"/>
+    <bpmn2:sequenceFlow id="Flow_External_To_Join" sourceRef="Task_CheckExternalSignals" targetRef="Gateway_DataPrepJoin"/>
+    <bpmn2:sequenceFlow id="Flow_Join_To_DataComplete" sourceRef="Gateway_DataPrepJoin" targetRef="Gateway_DataComplete"/>
+    <bpmn2:sequenceFlow id="Flow_DataComplete_To_Request" sourceRef="Gateway_DataComplete" targetRef="Task_AutoRequestInfo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[missing]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_Customer_Return_To_Split" sourceRef="Task_CustomerProvideInfo" targetRef="Gateway_DataPrepSplit"/>
+    <bpmn2:sequenceFlow id="Flow_Request_To_Customer" sourceRef="Task_AutoRequestInfo" targetRef="Task_CustomerProvideInfo"/>
+    <bpmn2:sequenceFlow id="Flow_DataComplete_To_Assemble" sourceRef="Gateway_DataComplete" targetRef="Task_AssembleClaimBrief">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[complete]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_Assemble_To_Officer" sourceRef="Task_AssembleClaimBrief" targetRef="Task_ClaimsOfficerReview"/>
+    <bpmn2:sequenceFlow id="Flow_Officer_To_Decision" sourceRef="Task_ClaimsOfficerReview" targetRef="Gateway_OfficerDecision"/>
+    <bpmn2:sequenceFlow id="Flow_Decision_To_Settlement" sourceRef="Gateway_OfficerDecision" targetRef="EndEvent_Settled">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[approve]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_Escalation_To_Denial" sourceRef="Task_EscalateCase" targetRef="EndEvent_Rejected"/>
+    <bpmn2:sequenceFlow id="Flow_Decision_To_Denial" sourceRef="Gateway_OfficerDecision" targetRef="EndEvent_Rejected">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" language="http://www.java.com/java"><![CDATA[decline]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="Flow_SLA_To_Escalation" sourceRef="Boundary_DocsSLA" targetRef="Task_EscalateCase"/>
+    <bpmn2:startEvent id="StartEvent_RequestClaim" name="Agent Receives Claim">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Agent Receives Claim]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>Flow_Start_To_Review</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="Task_ReviewRequest" name="System Reviews Claim Request">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[System Reviews Claim Request]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Start_To_Review</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Review_To_Record</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_RecordInformation" name="Record Claim Information">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Record Claim Information]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Review_To_Record</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Record_To_Ack</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:intermediateThrowEvent id="Event_AcknowledgeReceipt" name="Send Acknowledgment">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Send Acknowledgment]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Record_To_Ack</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Ack_To_DataSplit</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition drools:msgref="Claim Acknowledgment" messageRef="_mUWAAKbeED6oT9FF3i70Ag"/>
+    </bpmn2:intermediateThrowEvent>
+    <bpmn2:parallelGateway id="Gateway_DataPrepSplit" name="Auto Data Checks">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Auto Data Checks]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Customer_Return_To_Split</bpmn2:incoming>
+      <bpmn2:incoming>Flow_Ack_To_DataSplit</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Split_To_External</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Split_To_History</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Split_To_Policy</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Split_To_Validate</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:task id="Task_ValidateDocuments" name="Validate Claim Document and Data">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Validate Claim Document and Data]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Split_To_Validate</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Validate_To_Join</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_CheckPolicyCoverage" name="Query Policy and Coverage">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Query Policy and Coverage]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Split_To_Policy</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Policy_To_Join</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_CheckClaimsHistory" name="Check Historical Claims">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Check Historical Claims]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Split_To_History</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_History_To_Join</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_CheckExternalSignals" name="Check External Signals">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Check External Signals]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Split_To_External</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_External_To_Join</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:parallelGateway id="Gateway_DataPrepJoin" gatewayDirection="Converging">
+      <bpmn2:incoming>Flow_External_To_Join</bpmn2:incoming>
+      <bpmn2:incoming>Flow_History_To_Join</bpmn2:incoming>
+      <bpmn2:incoming>Flow_Policy_To_Join</bpmn2:incoming>
+      <bpmn2:incoming>Flow_Validate_To_Join</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Join_To_DataComplete</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    <bpmn2:exclusiveGateway id="Gateway_DataComplete" name="Data Complete?" gatewayDirection="Diverging">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Data Complete?]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Join_To_DataComplete</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_DataComplete_To_Assemble</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_DataComplete_To_Request</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:task id="Task_AutoRequestInfo" name="System Requests Missing Info from Customer">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[System Requests Missing Info from Customer]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_DataComplete_To_Request</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Request_To_Customer</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:userTask id="Task_CustomerProvideInfo" name="Claims Agent Updates Remaining Info">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Claims Agent Updates Remaining Info]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Request_To_Customer</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Customer_Return_To_Split</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="Task_CustomerProvideInfo_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_Task_CustomerProvideInfo_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="Task_CustomerProvideInfo_SkippableInputX" drools:dtype="Object" itemSubjectRef="_Task_CustomerProvideInfo_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>Task_CustomerProvideInfo_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>Task_CustomerProvideInfo_SkippableInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>Task_CustomerProvideInfo_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Task]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[Task_CustomerProvideInfo_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>Task_CustomerProvideInfo_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[Task_CustomerProvideInfo_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:task id="Task_EscalateCase" name="System Escalates for Agent Review">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[System Escalates for Agent Review]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_SLA_To_Escalation</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Escalation_To_Denial</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:task id="Task_AssembleClaimBrief" name="AI Generates Assessment Brief">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[AI Generates Assessment Brief]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_DataComplete_To_Assemble</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Assemble_To_Officer</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:userTask id="Task_ClaimsOfficerReview" name="Claims Agent Decision (Reviews AI Assessment)">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Claims Agent Decision (Reviews AI Assessment)]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Assemble_To_Officer</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Officer_To_Decision</bpmn2:outgoing>
+      <bpmn2:ioSpecification>
+        <bpmn2:dataInput id="Task_ClaimsOfficerReview_TaskNameInputX" drools:dtype="Object" itemSubjectRef="_Task_ClaimsOfficerReview_TaskNameInputXItem" name="TaskName"/>
+        <bpmn2:dataInput id="Task_ClaimsOfficerReview_SkippableInputX" drools:dtype="Object" itemSubjectRef="_Task_ClaimsOfficerReview_SkippableInputXItem" name="Skippable"/>
+        <bpmn2:inputSet>
+          <bpmn2:dataInputRefs>Task_ClaimsOfficerReview_TaskNameInputX</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>Task_ClaimsOfficerReview_SkippableInputX</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>Task_ClaimsOfficerReview_TaskNameInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Task]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[Task_ClaimsOfficerReview_TaskNameInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation>
+        <bpmn2:targetRef>Task_ClaimsOfficerReview_SkippableInputX</bpmn2:targetRef>
+        <bpmn2:assignment>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[Task_ClaimsOfficerReview_SkippableInputX]]></bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="Gateway_OfficerDecision" name="Agent Decision: Approve/Deny" gatewayDirection="Diverging">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Agent Decision: Approve/Deny]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Officer_To_Decision</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Decision_To_Denial</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Decision_To_Settlement</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:endEvent id="EndEvent_Settled" name="Approved - Ready for Settlement Handoff">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Approved - Ready for Settlement Handoff]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Decision_To_Settlement</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:endEvent id="EndEvent_Rejected" name="Denied">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Denied]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_Decision_To_Denial</bpmn2:incoming>
+      <bpmn2:incoming>Flow_Escalation_To_Denial</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:boundaryEvent id="Boundary_DocsSLA" drools:dockerinfo="75^-15|" drools:boundaryca="true" name="Docs SLA" attachedToRef="Task_CustomerProvideInfo">
+      <bpmn2:extensionElements>
+        <drools:metaData name="elementname">
+          <drools:metaValue><![CDATA[Docs SLA]]></drools:metaValue>
+        </drools:metaData>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>Flow_SLA_To_Escalation</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeDuration xsi:type="bpmn2:tFormalExpression">P5D</bpmn2:timeDuration>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:boundaryEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="general_insurance_payment_claim_process">
+      <bpmndi:BPMNShape id="shape_Boundary_DocsSLA" bpmnElement="Boundary_DocsSLA">
+        <dc:Bounds height="56" width="56" x="1468" y="177"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_EndEvent_Rejected" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds height="56" width="56" x="1995" y="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_EndEvent_Settled" bpmnElement="EndEvent_Settled">
+        <dc:Bounds height="56" width="56" x="1981" y="420"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_OfficerDecision" bpmnElement="Gateway_OfficerDecision">
+        <dc:Bounds height="56" width="56" x="1620" y="315"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_ClaimsOfficerReview" bpmnElement="Task_ClaimsOfficerReview">
+        <dc:Bounds height="80" width="190" x="1447" y="548"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_AssembleClaimBrief" bpmnElement="Task_AssembleClaimBrief">
+        <dc:Bounds height="80" width="190" x="1147" y="538"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_EscalateCase" bpmnElement="Task_EscalateCase">
+        <dc:Bounds height="80" width="190" x="1620" y="100"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_CustomerProvideInfo" bpmnElement="Task_CustomerProvideInfo">
+        <dc:Bounds height="80" width="190" x="1393" y="192"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_AutoRequestInfo" bpmnElement="Task_AutoRequestInfo">
+        <dc:Bounds height="80" width="190" x="1180" y="58"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_DataComplete" bpmnElement="Gateway_DataComplete">
+        <dc:Bounds height="56" width="56" x="1095" y="235"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_DataPrepJoin" bpmnElement="Gateway_DataPrepJoin">
+        <dc:Bounds height="56" width="56" x="980" y="235"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_CheckExternalSignals" bpmnElement="Task_CheckExternalSignals">
+        <dc:Bounds height="80" width="190" x="760" y="440"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_CheckClaimsHistory" bpmnElement="Task_CheckClaimsHistory">
+        <dc:Bounds height="80" width="190" x="760" y="320"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_CheckPolicyCoverage" bpmnElement="Task_CheckPolicyCoverage">
+        <dc:Bounds height="80" width="190" x="760" y="200"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_ValidateDocuments" bpmnElement="Task_ValidateDocuments">
+        <dc:Bounds height="80" width="190" x="760" y="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Gateway_DataPrepSplit" bpmnElement="Gateway_DataPrepSplit">
+        <dc:Bounds height="56" width="56" x="640" y="235"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Event_AcknowledgeReceipt" bpmnElement="Event_AcknowledgeReceipt">
+        <dc:Bounds height="56" width="56" x="560" y="240"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_RecordInformation" bpmnElement="Task_RecordInformation">
+        <dc:Bounds height="80" width="170" x="360" y="220"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_ReviewRequest" bpmnElement="Task_ReviewRequest">
+        <dc:Bounds height="80" width="150" x="190" y="220"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_StartEvent_RequestClaim" bpmnElement="StartEvent_RequestClaim">
+        <dc:Bounds height="56" width="56" x="120" y="240"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge_shape_Boundary_DocsSLA_to_shape_Task_EscalateCase" bpmnElement="Flow_SLA_To_Escalation">
+        <di:waypoint x="1488" y="192"/>
+        <di:waypoint x="1620" y="140"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_OfficerDecision_to_shape_EndEvent_Rejected" bpmnElement="Flow_Decision_To_Denial">
+        <di:waypoint x="1670" y="330"/>
+        <di:waypoint x="1995" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_EscalateCase_to_shape_EndEvent_Rejected" bpmnElement="Flow_Escalation_To_Denial">
+        <di:waypoint x="1810" y="140"/>
+        <di:waypoint x="1995" y="180"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_OfficerDecision_to_shape_EndEvent_Settled" bpmnElement="Flow_Decision_To_Settlement">
+        <di:waypoint x="1670" y="340"/>
+        <di:waypoint x="1981" y="440"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_ClaimsOfficerReview_to_shape_Gateway_OfficerDecision" bpmnElement="Flow_Officer_To_Decision">
+        <di:waypoint x="1637" y="588"/>
+        <di:waypoint x="1645" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_AssembleClaimBrief_to_shape_Task_ClaimsOfficerReview" bpmnElement="Flow_Assemble_To_Officer">
+        <di:waypoint x="1337" y="578"/>
+        <di:waypoint x="1447" y="588"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataComplete_to_shape_Task_AssembleClaimBrief" bpmnElement="Flow_DataComplete_To_Assemble">
+        <di:waypoint x="1145" y="260"/>
+        <di:waypoint x="1197" y="558"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_AutoRequestInfo_to_shape_Task_CustomerProvideInfo" bpmnElement="Flow_Request_To_Customer">
+        <di:waypoint x="1370" y="98"/>
+        <di:waypoint x="1393" y="232"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_CustomerProvideInfo_to_shape_Gateway_DataPrepSplit" bpmnElement="Flow_Customer_Return_To_Split">
+        <di:waypoint x="1513" y="232"/>
+        <di:waypoint x="1487.9999421515417" y="15"/>
+        <di:waypoint x="701" y="15"/>
+        <di:waypoint x="665" y="235"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataComplete_to_shape_Task_AutoRequestInfo" bpmnElement="Flow_DataComplete_To_Request">
+        <di:waypoint x="1115" y="235"/>
+        <di:waypoint x="1180" y="98"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataPrepJoin_to_shape_Gateway_DataComplete" bpmnElement="Flow_Join_To_DataComplete">
+        <di:waypoint x="1030" y="260"/>
+        <di:waypoint x="1095" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_CheckExternalSignals_to_shape_Gateway_DataPrepJoin" bpmnElement="Flow_External_To_Join">
+        <di:waypoint x="950" y="480"/>
+        <di:waypoint x="1005" y="310"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_CheckClaimsHistory_to_shape_Gateway_DataPrepJoin" bpmnElement="Flow_History_To_Join">
+        <di:waypoint x="950" y="360"/>
+        <di:waypoint x="1005" y="285"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_CheckPolicyCoverage_to_shape_Gateway_DataPrepJoin" bpmnElement="Flow_Policy_To_Join">
+        <di:waypoint x="950" y="240"/>
+        <di:waypoint x="980" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_ValidateDocuments_to_shape_Gateway_DataPrepJoin" bpmnElement="Flow_Validate_To_Join">
+        <di:waypoint x="950" y="120"/>
+        <di:waypoint x="1005" y="235"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataPrepSplit_to_shape_Task_CheckExternalSignals" bpmnElement="Flow_Split_To_External">
+        <di:waypoint x="650" y="300"/>
+        <di:waypoint x="760" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataPrepSplit_to_shape_Task_CheckClaimsHistory" bpmnElement="Flow_Split_To_History">
+        <di:waypoint x="665" y="285"/>
+        <di:waypoint x="760" y="360"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataPrepSplit_to_shape_Task_CheckPolicyCoverage" bpmnElement="Flow_Split_To_Policy">
+        <di:waypoint x="690" y="260"/>
+        <di:waypoint x="760" y="240"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Gateway_DataPrepSplit_to_shape_Task_ValidateDocuments" bpmnElement="Flow_Split_To_Validate">
+        <di:waypoint x="665" y="235"/>
+        <di:waypoint x="760" y="160"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Event_AcknowledgeReceipt_to_shape_Gateway_DataPrepSplit" bpmnElement="Flow_Ack_To_DataSplit">
+        <di:waypoint x="596" y="258"/>
+        <di:waypoint x="640" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_RecordInformation_to_shape_Event_AcknowledgeReceipt" bpmnElement="Flow_Record_To_Ack">
+        <di:waypoint x="530" y="260"/>
+        <di:waypoint x="560" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_Task_ReviewRequest_to_shape_Task_RecordInformation" bpmnElement="Flow_Review_To_Record">
+        <di:waypoint x="340" y="260"/>
+        <di:waypoint x="360" y="260"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge_shape_StartEvent_RequestClaim_to_shape_Task_ReviewRequest" bpmnElement="Flow_Start_To_Review">
+        <di:waypoint x="156" y="258"/>
+        <di:waypoint x="190" y="258"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmn2:relationship type="BPSimData">
+    <bpmn2:extensionElements>
+      <bpsim:BPSimData>
+        <bpsim:Scenario id="default" name="Simulationscenario">
+          <bpsim:ScenarioParameters/>
+          <bpsim:ElementParameters elementRef="Task_ClaimsOfficerReview">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_AssembleClaimBrief">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_EscalateCase">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_CustomerProvideInfo">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_AutoRequestInfo">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_CheckExternalSignals">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_CheckClaimsHistory">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_CheckPolicyCoverage">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_ValidateDocuments">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_RecordInformation">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="Task_ReviewRequest">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+            <bpsim:ResourceParameters>
+              <bpsim:Availability>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Availability>
+              <bpsim:Quantity>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:Quantity>
+            </bpsim:ResourceParameters>
+            <bpsim:CostParameters>
+              <bpsim:UnitCost>
+                <bpsim:FloatingParameter value="0"/>
+              </bpsim:UnitCost>
+            </bpsim:CostParameters>
+          </bpsim:ElementParameters>
+          <bpsim:ElementParameters elementRef="StartEvent_RequestClaim">
+            <bpsim:TimeParameters>
+              <bpsim:ProcessingTime>
+                <bpsim:NormalDistribution mean="0" standardDeviation="0"/>
+              </bpsim:ProcessingTime>
+            </bpsim:TimeParameters>
+          </bpsim:ElementParameters>
+        </bpsim:Scenario>
+      </bpsim:BPSimData>
+    </bpmn2:extensionElements>
+    <bpmn2:source>_mUUx4KbeED6oT9FF3i70Ag</bpmn2:source>
+    <bpmn2:target>_mUUx4KbeED6oT9FF3i70Ag</bpmn2:target>
+  </bpmn2:relationship>
+</bpmn2:definitions>

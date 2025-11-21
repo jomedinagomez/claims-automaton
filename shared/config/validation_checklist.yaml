@@ -1,0 +1,84 @@
+# Validation checklist for claim assessment quality control
+# Used by ReviewerAgent to validate AI-generated assessment outputs
+
+required_fields:
+  - claim_id
+  - customer_id
+  - policy_number
+  - incident_date
+  - filed_date
+  - claim_amount
+  - assessment_summary
+
+policy_validation:
+  - check: "Policy status is active"
+    severity: critical
+    error_message: "Policy must be active at time of incident"
+  
+  - check: "Incident date within policy coverage period"
+    severity: critical
+    error_message: "Incident must occur during active policy period"
+  
+  - check: "Claim amount within policy limits"
+    severity: high
+    error_message: "Claim amount exceeds policy coverage limit"
+  
+  - check: "Deductible properly applied"
+    severity: medium
+    error_message: "Deductible calculation appears incorrect"
+
+documentation_validation:
+  - check: "Required documents present"
+    required_docs:
+      auto_collision: ["police_report", "repair_estimate"]
+      auto_comprehensive: ["incident_photos", "repair_estimate"]
+      home_fire: ["fire_report", "damage_assessment", "inventory_list"]
+      health_surgery: ["medical_records", "procedure_codes", "itemized_bill"]
+    severity: high
+  
+  - check: "Document dates align with incident timeline"
+    severity: medium
+    error_message: "Document timestamps inconsistent with reported incident date"
+
+fraud_validation:
+  - check: "Customer not on blacklist"
+    severity: critical
+    error_message: "Customer flagged in blacklist database"
+  
+  - check: "Vendor not on blacklist"
+    severity: critical
+    error_message: "Service provider flagged in blacklist database"
+  
+  - check: "No duplicate claim patterns"
+    severity: high
+    error_message: "Similar claim filed recently by same customer"
+  
+  - check: "Incident corroborated by third party"
+    severity: medium
+    error_message: "No independent verification of incident"
+
+assessment_quality:
+  - check: "Assessment tone is neutral and professional"
+    severity: medium
+    error_message: "Assessment contains inappropriate language or tone"
+  
+  - check: "All calculations documented with source data"
+    severity: high
+    error_message: "Payout calculation lacks transparency"
+  
+  - check: "Recommendation clearly stated with confidence level"
+    severity: high
+    error_message: "Assessment lacks clear recommendation"
+  
+  - check: "PII/PHI properly redacted where applicable"
+    severity: critical
+    error_message: "Assessment contains unredacted sensitive information"
+
+compliance_checks:
+  - check: "HIPAA compliance for health claims"
+    applicable_to: ["health_surgery"]
+    severity: critical
+  
+  - check: "Fair Claims Settlement Practices compliance"
+    severity: high
+    error_message: "Assessment may violate state claims practices regulations"

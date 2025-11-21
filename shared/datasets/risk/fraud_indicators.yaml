@@ -1,0 +1,29 @@
+patterns:
+  duplicate_claims:
+    threshold: 2
+    timeframe_days: 90
+    severity: high
+    description: "Multiple claims for same incident type within 90 days"
+  
+  high_value_claim:
+    threshold: 50000
+    severity: medium
+    description: "Claim amount exceeds $50k requires additional review"
+  
+  blacklisted_entity:
+    severity: critical
+    description: "Customer, provider, or shop on blacklist"
+  
+  inconsistent_statements:
+    severity: high
+    description: "Conflicting dates, locations, or narratives in documentation"
+  
+  suspicious_timing:
+    patterns:
+      - "Policy activated <30 days before incident"
+      - "Claim filed >14 days after incident without explanation"
+    severity: medium
+  
+  missing_corroboration:
+    severity: medium
+    description: "No police report, witness, or third-party verification"

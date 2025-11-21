@@ -1,0 +1,13 @@
+policy_tier,claim_type,coverage_limit,deductible,exclusions,notes
+basic,auto_collision,15000,1000,racing|commercial_use,Standard collision coverage
+standard,auto_collision,25000,500,racing|commercial_use,Enhanced collision coverage
+premium,auto_collision,50000,250,racing,Comprehensive collision with low deductible
+basic,auto_comprehensive,10000,1000,wear_and_tear|mechanical,Theft and vandalism only
+standard,auto_comprehensive,20000,500,wear_and_tear|mechanical,Includes weather damage
+premium,auto_comprehensive,40000,250,wear_and_tear,Full comprehensive coverage
+basic,home_fire,100000,2500,arson|business_use,Structure only
+standard,home_fire,250000,1500,arson|business_use,Structure + contents
+premium,home_fire,500000,1000,arson,Full replacement value
+basic,health_surgery,50000,5000,cosmetic|experimental,Emergency procedures only
+standard,health_surgery,150000,2500,cosmetic|experimental,Planned and emergency
+premium,health_surgery,unlimited,1000,cosmetic,All medically necessary procedures

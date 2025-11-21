@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["claim_id", "decision", "agent_id", "decision_timestamp"],
+  "properties": {
+    "claim_id": {"type": "string", "pattern": "^CLM-[0-9]{4}-[0-9]{5}$"},
+    "decision": {"type": "string", "enum": ["approve", "deny"]},
+    "payout_amount": {"type": "number", "minimum": 0},
+    "agent_id": {"type": "string", "pattern": "^AGT-[0-9]{3}$"},
+    "decision_timestamp": {"type": "string", "format": "date-time"},
+    "confidence_score": {"type": "integer", "minimum": 0, "maximum": 100},
+    "fraud_risk": {"type": "integer", "minimum": 0, "maximum": 100},
+    "rationale": {"type": "string", "minLength": 10},
+    "attachments": {"type": "array", "items": {"type": "string"}},
+    "denial_reason": {"type": "string", "enum": ["fraud_suspected", "insufficient_documentation", "not_covered", "policy_limit_exceeded", "other"]}
+  }
+}

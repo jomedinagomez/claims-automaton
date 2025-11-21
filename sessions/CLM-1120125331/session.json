@@ -1,0 +1,11 @@
+{
+  "claim_id": "CLM-1120125331",
+  "saved_at": "2025-11-20T17:53:42.836037Z",
+  "message_count": 5,
+  "status": "paused_after_phase1",
+  "missing_documents": [
+    "Vehicle damage photos",
+    "Insurance information exchange form"
+  ],
+  "paused_at": "2025-11-20T17:53:42.834000Z"
+}

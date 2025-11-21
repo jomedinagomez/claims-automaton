@@ -1,0 +1,61 @@
+icd10_code,description,category,typical_cost_min,typical_cost_max,common,notes
+K35.80,Unspecified acute appendicitis,surgery,8000,15000,True,Emergency appendectomy
+S72.001A,Fracture of unspecified part of neck of right femur,orthopedic,25000,50000,True,Hip fracture surgery
+I21.9,Acute myocardial infarction unspecified,cardiac,30000,75000,True,Heart attack treatment
+M17.11,Unilateral primary osteoarthritis right knee,orthopedic,15000,35000,True,Knee replacement
+Z00.00,General adult medical examination,preventive,200,500,True,Routine checkup
+J44.1,COPD with exacerbation,respiratory,5000,12000,True,COPD treatment
+E11.9,Type 2 diabetes mellitus without complications,chronic,800,4500,True,Ongoing management
+C50.911,Malignant neoplasm right female breast,oncology,50000,150000,False,Cancer treatment
+S13.4XXA,Sprain of ligaments of cervical spine,orthopedic,3000,7500,True,Whiplash care
+T14.90XA,Injury unspecified,trauma,2000,8000,True,General trauma evaluation
+S06.0X1A,Concussion with loss of consciousness,neurology,4000,9000,True,Concussion monitoring
+G81.91,Hemiplegia affecting unspecified side,neurology,45000,90000,False,Stroke rehab
+S82.201A,Unspecified fracture of shaft of right tibia,orthopedic,12000,28000,True,Tibia fracture fixation
+N18.6,End stage renal disease,renal,60000,120000,False,Dialysis + transplant prep
+F10.239,Alcohol dependence with withdrawal,behavioral,8000,16000,True,Inpatient detox
+O82,Encounter for cesarean delivery,obstetrics,18000,35000,True,C-section
+A41.9,"Sepsis, unspecified",infectious,25000,60000,False,Severe sepsis care
+S27.2XXA,Traumatic pneumothorax,trauma,15000,32000,True,Chest tube + ICU
+K80.20,Calculus of gallbladder,surgery,12000,25000,True,Laparoscopic cholecystectomy
+Z51.11,Encounter for antineoplastic chemotherapy,oncology,20000,60000,False,Chemo session
+S83.201A,Bucket-handle tear medial meniscus right knee,orthopedic,6500,18000,True,Arthroscopic repair
+S83.211A,Bucket-handle tear lateral meniscus right knee,orthopedic,6200,17500,True,Arthroscopic meniscectomy
+M25.561,Pain in right knee,orthopedic,800,3500,True,PT evaluation recommended
+M23.205,Derangement of meniscus due to old tear,orthopedic,4500,12000,True,Chronic meniscal pathology
+K40.90,Unilateral inguinal hernia without obstruction,surgery,9500,18000,True,Laparoscopic mesh repair
+K40.20,Bilateral inguinal hernia without obstruction,surgery,12000,26000,False,Bilateral mesh reinforcement
+K43.9,Ventral hernia without obstruction,surgery,11000,24000,True,Open hernia repair
+K42.9,Umbilical hernia without obstruction,surgery,7500,16000,True,Primary closure or mesh
+I25.10,Atherosclerotic heart disease native coronary artery,cardiac,15000,42000,True,Cath lab evaluation + stent possible
+I25.119,Atherosclerotic heart disease with angina pectoris,cardiac,18000,48000,True,Cardiac stress test + intervention
+I48.91,Unspecified atrial fibrillation,cardiac,8000,22000,True,Anticoagulation + rate control
+I50.9,Heart failure unspecified,cardiac,12000,35000,True,Diuresis + cardiac workup
+J45.40,Moderate persistent asthma uncomplicated,respiratory,2500,8000,True,Controller medication adjustment
+J45.51,Severe persistent asthma with status asthmaticus,respiratory,8000,22000,False,ICU admission + intubation risk
+J44.0,COPD with acute lower respiratory infection,respiratory,6000,16000,True,Antibiotics + bronchodilators
+J18.9,Pneumonia unspecified organism,respiratory,7000,18000,True,Chest X-ray + antibiotics
+E11.65,Type 2 diabetes with hyperglycemia,chronic,1200,5500,True,A1C monitoring + medication titration
+E78.5,Hyperlipidemia unspecified,chronic,400,2200,True,Lipid panel + statin therapy
+I10,Essential hypertension,chronic,300,1800,True,BP monitoring + antihypertensives
+E66.9,Obesity unspecified,chronic,500,3000,True,Diet counseling + bariatric evaluation
+C50.919,Malignant neoplasm of unspecified breast,oncology,55000,165000,False,Lumpectomy or mastectomy + chemo
+C18.9,Malignant neoplasm of colon unspecified,oncology,48000,140000,False,Colectomy + adjuvant therapy
+C34.90,Malignant neoplasm of unspecified lung,oncology,62000,180000,False,Lobectomy + radiation
+C79.51,Secondary malignant neoplasm of bone,oncology,45000,125000,False,Palliative radiation + pain management
+S82.202A,Unspecified fracture shaft left tibia,trauma,18000,42000,False,ORIF with plate fixation
+S82.401A,Unspecified fracture shaft right fibula,trauma,12000,28000,True,Immobilization or ORIF
+S06.2X0A,Diffuse traumatic brain injury without LOC,trauma,22000,58000,False,ICU monitoring + neurosurgery consult
+S36.500A,Unspecified injury of unspecified kidney,trauma,28000,75000,False,CT imaging + possible nephrectomy
+G40.909,Epilepsy unspecified not intractable,neurology,9000,24000,True,EEG + antiepileptic medication
+G43.909,Migraine unspecified not intractable,neurology,1500,6500,True,Imaging + migraine prophylaxis
+G35,Multiple sclerosis,neurology,18000,52000,False,MRI + disease-modifying therapy
+G20,Parkinson disease,neurology,12000,38000,False,Neurologist management + medications
+N18.5,Chronic kidney disease stage 5,renal,65000,135000,False,Dialysis initiation + transplant eval
+N18.3,Chronic kidney disease stage 3,renal,8000,22000,True,Nephrology follow-up + BP control
+N17.9,Acute kidney failure unspecified,renal,28000,68000,False,ICU care + possible dialysis
+N20.0,Calculus of kidney,renal,9000,24000,True,Lithotripsy or ureteroscopy
+F11.20,Opioid dependence uncomplicated,behavioral,6500,18000,True,MAT initiation + counseling
+F10.20,Alcohol dependence uncomplicated,behavioral,7500,20000,True,Detox + rehab program
+F33.1,Major depressive disorder recurrent moderate,behavioral,3500,12000,True,Medication + psychotherapy
+F41.1,Generalized anxiety disorder,behavioral,2800,9500,True,SSRI + CBT

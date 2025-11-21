@@ -1,0 +1,49 @@
+{
+  "events": [
+    {
+      "event_id": "WX-2025-11-10-001",
+      "date": "2025-11-10",
+      "location": "I-95 Corridor, Maryland",
+      "event_type": "heavy_rain",
+      "severity": "moderate",
+      "description": "Persistent rain 2-4 inches, reduced visibility",
+      "verified_sources": ["NOAA", "local_news"]
+    },
+    {
+      "event_id": "WX-2025-09-15-002",
+      "date": "2025-09-15",
+      "location": "Houston, TX",
+      "event_type": "hail",
+      "severity": "severe",
+      "description": "Golf ball sized hail, widespread vehicle damage",
+      "verified_sources": ["NOAA", "insurance_industry_cat"]
+    },
+    {
+      "event_id": "WX-2025-08-22-003",
+      "date": "2025-08-22",
+      "location": "Baltimore County, MD",
+      "event_type": "thunderstorm",
+      "severity": "moderate",
+      "description": "Severe thunderstorms with wind gusts up to 60 mph, tree damage",
+      "verified_sources": ["NOAA", "local_emergency_services"]
+    },
+    {
+      "event_id": "WX-2025-07-04-004",
+      "date": "2025-07-04",
+      "location": "Washington DC Metro Area",
+      "event_type": "flooding",
+      "severity": "severe",
+      "description": "Flash flooding from 5+ inches rain in 3 hours",
+      "verified_sources": ["NOAA", "FEMA"]
+    },
+    {
+      "event_id": "WX-2025-02-15-005",
+      "date": "2025-02-15",
+      "location": "Northern Virginia",
+      "event_type": "ice_storm",
+      "severity": "severe",
+      "description": "Freezing rain causing widespread power outages and vehicle accidents",
+      "verified_sources": ["NOAA", "state_emergency_mgmt"]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "state": "data_gathering_complete",
+  "missing_documents": [],
+  "risk_score": 0,
+  "fraud_indicators": [],
+  "assessment_confidence": 0,
+  "agent_decision": null,
+  "decision_confidence": 0,
+  "ack_sent": true,
+  "info_request_sent": false,
+  "sla_breached": false,
+  "agent_reviewed": false,
+  "handoff_status": "pending",
+  "denial_package_ready": false,
+  "claim_id": "CLM-1121170332",
+  "policy_number": "UNKNOWN",
+  "customer": {
+    "name": "Unknown",
+    "email": "unknown@example.com",
+    "phone": "555-000-0000"
+  },
+  "incident": {
+    "date": "unknown",
+    "description": "hello",
+    "location": "unknown"
+  },
+  "documents": [],
+  "submission_method": "email",
+  "original_content": "hello",
+  "debug_log_path": "output\\agent_traces\\CLM-1121170332_trace.txt",
+  "termination_reason": "max_rounds_exceeded"
+}

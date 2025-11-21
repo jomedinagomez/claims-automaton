@@ -1,0 +1,123 @@
+# Policy business rules for claims processing
+
+coverage_rules:
+  auto:
+    collision:
+      basic:
+        coverage_limit: 15000
+        deductible: 1000
+        exclusions:
+          - racing
+          - commercial_use
+      standard:
+        coverage_limit: 25000
+        deductible: 500
+        exclusions:
+          - racing
+          - commercial_use
+      premium:
+        coverage_limit: 50000
+        deductible: 250
+        exclusions:
+          - racing
+    
+    comprehensive:
+      basic:
+        coverage_limit: 10000
+        deductible: 1000
+        exclusions:
+          - wear_and_tear
+          - mechanical
+      standard:
+        coverage_limit: 20000
+        deductible: 500
+        exclusions:
+          - wear_and_tear
+          - mechanical
+      premium:
+        coverage_limit: 40000
+        deductible: 250
+        exclusions:
+          - wear_and_tear
+
+  home:
+    fire:
+      basic:
+        coverage_limit: 100000
+        deductible: 2500
+        exclusions:
+          - arson
+          - business_use
+      standard:
+        coverage_limit: 250000
+        deductible: 1500
+        exclusions:
+          - arson
+          - business_use
+      premium:
+        coverage_limit: 500000
+        deductible: 1000
+        exclusions:
+          - arson
+
+  health:
+    surgery:
+      basic:
+        coverage_limit: 50000
+        deductible: 5000
+        exclusions:
+          - cosmetic
+          - experimental
+      standard:
+        coverage_limit: 150000
+        deductible: 2500
+        exclusions:
+          - cosmetic
+          - experimental
+      premium:
+        coverage_limit: null  # unlimited
+        deductible: 1000
+        exclusions:
+          - cosmetic
+
+filing_requirements:
+  auto_collision:
+    max_days_to_file: 14
+    required_documents:
+      - police_report
+      - repair_estimate
+      - photos_of_damage
+    
+  auto_comprehensive:
+    max_days_to_file: 14
+    required_documents:
+      - incident_report
+      - repair_estimate
+      - photos_of_damage
+  
+  home_fire:
+    max_days_to_file: 7
+    required_documents:
+      - fire_department_report
+      - damage_assessment
+      - inventory_of_losses
+      - photos_of_damage
+  
+  health_surgery:
+    max_days_to_file: 30
+    required_documents:
+      - medical_records
+      - procedure_codes
+      - itemized_bill
+      - physician_notes
+
+sla_timeframes:
+  acknowledgment: 1  # business days
+  initial_review: 5  # business days
+  document_request_response: 10  # calendar days
+  final_decision: 30  # business days from complete documentation
+
+approval_thresholds:
+  auto_adjudication_limit: 5000  # claims under this amount can be auto-approved if all checks pass
+  manager_approval_required: 25000  # claims over this require manager sign-off
+  executive_approval_required: 100000  # claims over this require executive approval

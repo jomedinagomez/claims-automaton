@@ -1,0 +1,59 @@
+{% if error %}
+<div class="message assistant">
+    <div class="message-avatar">AI</div>
+    <div class="message-content">
+        <strong>Error</strong><br>
+        {{ error }}
+    </div>
+</div>
+{% else %}
+<div class="message user">
+    <div class="message-content">
+        Claim submitted for processing
+    </div>
+    <div class="message-avatar">You</div>
+</div>
+<div class="message assistant">
+    <div class="message-avatar">AI</div>
+    <div class="message-content">
+        <strong>Claim Processed Successfully</strong>
+        <br><br>
+        <span class="result-badge {% if result.status == 'complete' %}success{% else %}warning{% endif %}">
+            {{ result.status|upper }}
+        </span>
+        {% if result.termination_reason %}
+        <span class="result-badge success">{{ result.termination_reason|replace('_', ' ')|title }}</span>
+        {% endif %}
+        
+        <div class="result-details">
+            <strong>Rounds Executed:</strong> {{ result.rounds_executed or 0 }}<br>
+            
+            {% if result.missing_documents %}
+            <br><strong>Missing Information:</strong>
+            <ul style="margin: 8px 0 0 20px;">
+                {% for item in result.missing_documents %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            {% if result.handoff_payload %}
+            <br><strong>Decision:</strong> {{ result.handoff_payload.decision or 'Pending' }}
+            {% if result.handoff_payload.amount %}
+            <br><strong>Amount:</strong> ${{ "%.2f"|format(result.handoff_payload.amount) }}
+            {% endif %}
+            {% if result.handoff_payload.notes %}
+            <br><strong>Notes:</strong> {{ result.handoff_payload.notes }}
+            {% endif %}
+            {% endif %}
+        </div>
+        
+        {% if result.context %}
+        <details style="margin-top: 12px;">
+            <summary style="cursor: pointer; color: #667eea; font-weight: 600;">View Full Context</summary>
+            <pre style="margin-top: 8px;">{{ result.context | tojson(indent=2) }}</pre>
+        </details>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

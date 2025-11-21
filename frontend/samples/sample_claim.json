@@ -1,0 +1,22 @@
+{
+  "claim_id": "CLM-DEMO-001",
+  "policy_number": "AUTO-789456",
+  "customer": {
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "phone": "555-123-4567"
+  },
+  "incident": {
+    "date": "2025-11-10",
+    "description": "Rear-end collision on I-95 near exit 42. Other driver admitted fault at the scene.",
+    "location": "I-95 North near exit 42"
+  },
+  "documents": [
+    "shared/submission/documents/police_report_12345.md",
+    "shared/submission/documents/repair_estimate_001.md",
+    "shared/submission/documents/medical_receipt_summary.md",
+    "shared/submission/documents/witness_statement.txt"
+  ],
+  "submission_method": "web",
+  "source_file": "frontend/samples/sample_claim.json"
+}

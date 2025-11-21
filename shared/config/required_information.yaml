@@ -1,0 +1,289 @@
+# Required information for claim processing
+# Used by IntakeAgent to validate completeness of claim submission
+#
+# WORKFLOW: 
+# 1. First collect all required DATA (information the user must provide)
+# 2. Then request required DOCUMENTS (files to verify the information)
+
+# =============================================================================
+# STEP 1: REQUIRED DATA - Collect this information first (via chat or initial file)
+# =============================================================================
+
+core_information:
+  # These fields are ALWAYS required for every claim type
+  always_required:
+    policy_number: 
+      description: "Insurance policy number"
+      example: "AUTO-789456"
+      how_to_ask: "What is your policy number?"
+    
+    incident_date: 
+      description: "When the incident occurred"
+      example: "2025-11-10"
+      how_to_ask: "When did the incident happen?"
+    
+    incident_location: 
+      description: "Where the incident occurred"
+      example: "I-95 North, mile marker 42, Baltimore, MD"
+      how_to_ask: "Where did this incident occur?"
+    
+    incident_description: 
+      description: "Detailed description of what happened"
+      example: "I was stopped at a red light when another car rear-ended me"
+      how_to_ask: "Can you describe what happened?"
+    
+    claim_amount: 
+      description: "Total amount being claimed (can be estimate)"
+      example: "8500"
+      how_to_ask: "What is the total amount you're claiming?"
+    
+    contact_information: 
+      description: "Best way to reach the claimant"
+      example: "john.smith@example.com or 410-555-1234"
+      how_to_ask: "What's the best phone number or email to reach you?"
+
+# Claim type specific DATA requirements
+claim_type_specific:
+  auto_collision:
+    required_data:
+      vehicle_info:
+        description: "Vehicle year, make, and model"
+        example: "2020 Toyota Camry"
+        how_to_ask: "What vehicle was involved? (year, make, model)"
+      
+      vehicle_damage_description:
+        description: "Description of damage to your vehicle"
+        example: "Rear bumper crushed, trunk lid dented"
+        how_to_ask: "Can you describe the damage to your vehicle?"
+      
+      vehicle_repair_amount:
+        description: "Estimated cost to repair vehicle"
+        example: "7000"
+        how_to_ask: "What is the estimated repair cost for your vehicle?"
+      
+      other_party_involved:
+        description: "Was another party involved?"
+        example: "yes"
+        how_to_ask: "Was another vehicle/party involved in the accident?"
+      
+      other_party_info:
+        description: "Other driver's name and insurance (if applicable)"
+        example: "Jane Doe, State Farm Policy #12345"
+        how_to_ask: "Can you provide the other party's name and insurance information?"
+        conditional: "other_party_involved == yes"
+      
+      police_called:
+        description: "Did police respond to the scene?"
+        example: "yes"
+        how_to_ask: "Did the police come to the scene?"
+      
+      injuries_occurred:
+        description: "Were there any injuries?"
+        example: "yes"
+        how_to_ask: "Were there any injuries from the accident?"
+      
+      medical_treatment_received:
+        description: "What medical treatment was received?"
+        example: "X-rays and examination at orthopedic clinic"
+        how_to_ask: "What medical treatment did you receive?"
+        conditional: "injuries_occurred == yes"
+      
+      medical_expenses_amount:
+        description: "Estimated medical expenses"
+        example: "1500"
+        how_to_ask: "What are the estimated medical expenses?"
+        conditional: "injuries_occurred == yes"
+    
+    # Documents requested AFTER data is collected
+    required_documents:
+      police_report: 
+        description: "Official police accident report"
+        when_required: "If police_called == yes"
+        how_to_ask: "Please provide the police report from the accident"
+      
+      repair_estimate: 
+        description: "Cost estimate from auto body shop"
+        when_required: "Always"
+        how_to_ask: "Please provide a repair estimate from a body shop"
+      
+      medical_records:
+        description: "Medical records from treatment"
+        when_required: "If injuries_occurred == yes"
+        how_to_ask: "Please provide medical records from your treatment"
+      
+      witness_statement:
+        description: "Statement from any witnesses"
+        when_required: "Optional"
+        how_to_ask: "If you have witness statements, please provide them"
+      
+  auto_comprehensive:
+    required_data:
+      vehicle_info:
+        description: "Vehicle year, make, and model"
+        example: "2019 Honda Accord"
+        how_to_ask: "What vehicle was damaged? (year, make, model)"
+      
+      incident_type:
+        description: "Type of incident"
+        example: "hail damage, theft, vandalism, weather"
+        how_to_ask: "What type of incident caused the damage? (theft, weather, vandalism, etc.)"
+      
+      vehicle_damage_description:
+        description: "Description of damage to vehicle"
+        example: "Multiple dents on hood and roof from hail"
+        how_to_ask: "Can you describe the damage to your vehicle?"
+      
+      vehicle_repair_amount:
+        description: "Estimated cost to repair vehicle"
+        example: "4500"
+        how_to_ask: "What is the estimated repair cost?"
+    
+    required_documents:
+      incident_photos: 
+        description: "Photos showing the damage"
+        when_required: "Always"
+        how_to_ask: "Please provide photos of the damage"
+      
+      repair_estimate: 
+        description: "Cost estimate from auto body shop"
+        when_required: "Always"
+        how_to_ask: "Please provide a repair estimate"
+      
+      police_report:
+        description: "Police report if theft or vandalism"
+        when_required: "If incident_type in ['theft', 'vandalism']"
+        how_to_ask: "Please provide the police report"
+      
+  home_fire:
+    required_data:
+      property_address:
+        description: "Address of the damaged property"
+        example: "123 Main St, Baltimore, MD 21201"
+        how_to_ask: "What is the address of the damaged property?"
+      
+      fire_cause:
+        description: "How the fire started (if known)"
+        example: "electrical, cooking, lightning"
+        how_to_ask: "What caused the fire?"
+      
+      damage_extent:
+        description: "Extent of property damage"
+        example: "Kitchen destroyed, smoke damage throughout first floor"
+        how_to_ask: "Can you describe the extent of the damage?"
+      
+      fire_department_responded:
+        description: "Did fire department respond?"
+        example: "yes"
+        how_to_ask: "Did the fire department respond to the fire?"
+      
+      property_damage_amount:
+        description: "Estimated cost of property damage"
+        example: "125000"
+        how_to_ask: "What is the estimated cost of the property damage?"
+      
+      temporary_housing_needed:
+        description: "Do you need temporary housing?"
+        example: "yes"
+        how_to_ask: "Do you need temporary housing while repairs are made?"
+      
+      temporary_housing_amount:
+        description: "Estimated temporary housing costs"
+        example: "5000"
+        how_to_ask: "What are the estimated temporary housing costs?"
+        conditional: "temporary_housing_needed == yes"
+    
+    required_documents:
+      fire_report: 
+        description: "Official fire department report"
+        when_required: "Always"
+        how_to_ask: "Please provide the fire department report"
+      
+      damage_assessment: 
+        description: "Professional damage assessment"
+        when_required: "Always"
+        how_to_ask: "Please provide a professional damage assessment"
+      
+      inventory_list: 
+        description: "List of damaged/destroyed items"
+        when_required: "Always"
+        how_to_ask: "Please provide an inventory of damaged or destroyed items"
+      
+      repair_estimates:
+        description: "Estimates for repairs"
+        when_required: "Always"
+        how_to_ask: "Please provide repair estimates from contractors"
+      
+  health_surgery:
+    required_data:
+      patient_name:
+        description: "Name of the patient"
+        example: "John Smith"
+        how_to_ask: "What is the patient's name?"
+      
+      date_of_service:
+        description: "Date of medical service"
+        example: "2025-11-11"
+        how_to_ask: "When was the medical service provided?"
+      
+      medical_provider:
+        description: "Name of hospital/clinic/doctor"
+        example: "Baltimore Orthopedic Clinic"
+        how_to_ask: "What is the name of the medical provider?"
+      
+      procedure_type:
+        description: "Type of medical procedure or treatment"
+        example: "X-ray and cervical spine examination"
+        how_to_ask: "What medical procedure or treatment was performed?"
+      
+      diagnosis:
+        description: "Medical diagnosis"
+        example: "Cervical strain"
+        how_to_ask: "What was the diagnosis?"
+      
+      medical_expenses_amount:
+        description: "Total medical costs"
+        example: "1500"
+        how_to_ask: "What are the total medical expenses?"
+      
+      related_to_accident:
+        description: "Is this related to an accident/injury?"
+        example: "yes"
+        how_to_ask: "Is this medical treatment related to an accident or injury?"
+    
+    required_documents:
+      medical_records: 
+        description: "Relevant medical records"
+        when_required: "Always"
+        how_to_ask: "Please provide the medical records from your treatment"
+      
+      procedure_codes: 
+        description: "CPT/ICD procedure codes"
+        when_required: "Always"
+        how_to_ask: "Please provide the procedure codes from your medical bill"
+      
+      itemized_bill: 
+        description: "Detailed billing statement"
+        when_required: "Always"
+        how_to_ask: "Please provide an itemized medical bill"
+
+# =============================================================================
+# STEP 2: VALIDATION RULES - How to validate the collected data
+# =============================================================================
+  
+validation_rules:
+  claim_amount:
+    - must_be_numeric: true
+    - must_be_positive: true
+    - reasonable_range: 
+        min: 100
+        max: 1000000
+        
+  dates:
+    - incident_date_must_be_past: true
+    - filed_date_must_be_after_incident: true
+    - incident_within_policy_period: true
+    
+  policy_number:
+    - format_validation: true
+    - must_exist_in_system: true
+    - must_be_active: true

@@ -1,0 +1,23 @@
+# Base dependencies for the claims Magentic orchestration project
+semantic-kernel>=1.12.0
+pydantic>=2.6.0
+python-dotenv>=1.0.0
+rich>=13.7.0
+typer>=0.12.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pandas>=2.2.0
+openai>=1.58.1
+azure-identity>=1.17.1
+
+
+# Observability
+opentelemetry-sdk>=1.27.0
+opentelemetry-exporter-otlp-proto-grpc>=1.27.0
+opentelemetry-instrumentation-logging>=0.49b0
+opentelemetry-distro>=0.49b0
+
+# Developer tooling
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+agent-framework --pre

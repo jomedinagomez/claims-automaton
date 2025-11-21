@@ -1,0 +1,54 @@
+{
+  "reports": [
+    {
+      "report_number": "2025-PD-8821",
+      "incident_date": "2025-11-10",
+      "location": "I-95 Northbound, Mile Marker 42",
+      "incident_type": "vehicle_collision",
+      "parties": [
+        {"name": "John Smith", "role": "victim", "vehicle": "Toyota Camry"},
+        {"name": "Jane Doe", "role": "at_fault", "vehicle": "Honda Accord"}
+      ],
+      "narrative": "Vehicle 2 failed to stop at red light, rear-ended Vehicle 1",
+      "verified": true,
+      "officer_badge": "12345"
+    },
+    {
+      "report_number": "2025-PD-7654",
+      "incident_date": "2025-10-15",
+      "location": "Route 50 East, Annapolis, MD",
+      "incident_type": "vehicle_collision",
+      "parties": [
+        {"name": "Sarah Johnson", "role": "victim", "vehicle": "Honda Accord"},
+        {"name": "Michael Chen", "role": "at_fault", "vehicle": "Ford F-150"}
+      ],
+      "narrative": "Driver changed lanes without signaling, sideswiped victim's vehicle",
+      "verified": true,
+      "officer_badge": "23456"
+    },
+    {
+      "report_number": "2025-PD-5432",
+      "incident_date": "2025-09-22",
+      "location": "Main Street & Oak Avenue, Rockville, MD",
+      "incident_type": "theft",
+      "parties": [
+        {"name": "Emily Rodriguez", "role": "victim", "vehicle": "BMW 3 Series"}
+      ],
+      "narrative": "Vehicle reported stolen from parking garage overnight",
+      "verified": true,
+      "officer_badge": "34567"
+    },
+    {
+      "report_number": "2025-PD-4321",
+      "incident_date": "2025-08-05",
+      "location": "Columbia Pike, Arlington, VA",
+      "incident_type": "hit_and_run",
+      "parties": [
+        {"name": "Robert Martinez", "role": "victim", "vehicle": "Nissan Altima"}
+      ],
+      "narrative": "Parked vehicle struck by unknown vehicle, no witnesses",
+      "verified": true,
+      "officer_badge": "45678"
+    }
+  ]
+}

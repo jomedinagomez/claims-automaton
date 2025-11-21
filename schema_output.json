@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "ClaimRecord": {
+      "properties": {
+        "claim_id": {
+          "pattern": "^CLM-20\\d{2}-\\d{5}$",
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "customer_id": {
+          "pattern": "^CUST-\\d{4}$",
+          "title": "Customer Id",
+          "type": "string"
+        },
+        "policy_number": {
+          "title": "Policy Number",
+          "type": "string"
+        },
+        "claim_type": {
+          "enum": [
+            "auto_collision",
+            "auto_comprehensive",
+            "home_fire",
+            "health_surgery"
+          ],
+          "title": "Claim Type",
+          "type": "string"
+        },
+        "incident_date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Incident Date",
+          "type": "string"
+        },
+        "filed_date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Filed Date",
+          "type": "string"
+        },
+        "closed_date": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed Date"
+        },
+        "amount_requested": {
+          "title": "Amount Requested",
+          "type": "number"
+        },
+        "reserved_amount": {
+          "title": "Reserved Amount",
+          "type": "number"
+        },
+        "amount_paid": {
+          "title": "Amount Paid",
+          "type": "number"
+        },
+        "claim_status": {
+          "enum": [
+            "closed_approved",
+            "closed_denied",
+            "open"
+          ],
+          "title": "Claim Status",
+          "type": "string"
+        },
+        "fraud_flag": {
+          "title": "Fraud Flag",
+          "type": "boolean"
+        },
+        "assigned_adjuster": {
+          "pattern": "^AGT-\\d{3}$",
+          "title": "Assigned Adjuster",
+          "type": "string"
+        },
+        "processing_days": {
+          "title": "Processing Days",
+          "type": "integer"
+        },
+        "notes": {
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_id",
+        "customer_id",
+        "policy_number",
+        "claim_type",
+        "incident_date",
+        "filed_date",
+        "amount_requested",
+        "reserved_amount",
+        "amount_paid",
+        "claim_status",
+        "fraud_flag",
+        "assigned_adjuster",
+        "processing_days",
+        "notes"
+      ],
+      "title": "ClaimRecord",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/ClaimRecord"
+      },
+      "title": "Claims",
+      "type": "array"
+    }
+  },
+  "required": [
+    "claims"
+  ],
+  "title": "ClaimBatch",
+  "type": "object"
+}

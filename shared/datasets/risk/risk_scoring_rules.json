@@ -1,0 +1,37 @@
+{
+  "risk_factors": [
+    {
+      "factor": "customer_claims_history",
+      "ranges": [
+        {"min": 0, "max": 0, "points": 0, "label": "no_history"},
+        {"min": 1, "max": 2, "points": 10, "label": "low_frequency"},
+        {"min": 3, "max": 5, "points": 25, "label": "moderate_frequency"},
+        {"min": 6, "max": 999, "points": 50, "label": "high_frequency"}
+      ]
+    },
+    {
+      "factor": "claim_amount_ratio",
+      "description": "Ratio of claim to policy coverage limit",
+      "ranges": [
+        {"min": 0.0, "max": 0.25, "points": 0, "label": "low"},
+        {"min": 0.25, "max": 0.50, "points": 5, "label": "moderate"},
+        {"min": 0.50, "max": 0.75, "points": 15, "label": "high"},
+        {"min": 0.75, "max": 1.0, "points": 30, "label": "very_high"}
+      ]
+    },
+    {
+      "factor": "documentation_completeness",
+      "ranges": [
+        {"min": 90, "max": 100, "points": -10, "label": "complete"},
+        {"min": 70, "max": 89, "points": 5, "label": "mostly_complete"},
+        {"min": 50, "max": 69, "points": 15, "label": "incomplete"},
+        {"min": 0, "max": 49, "points": 30, "label": "severely_incomplete"}
+      ]
+    }
+  ],
+  "score_interpretation": [
+    {"min": 0, "max": 20, "risk_level": "low", "recommendation": "approve"},
+    {"min": 21, "max": 50, "risk_level": "medium", "recommendation": "review"},
+    {"min": 51, "max": 100, "risk_level": "high", "recommendation": "deny"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "claim_id": "CLM-1121170427",
+  "saved_at": "2025-11-21T22:06:04.619656Z",
+  "message_count": 24,
+  "status": "completed",
+  "missing_documents": [],
+  "final_status": "timeout",
+  "termination_reason": "max_rounds_exceeded",
+  "completed_at": "2025-11-21T22:06:04.617320Z",
+  "archived_at": "2025-11-21T22:06:04.638445Z"
+}
