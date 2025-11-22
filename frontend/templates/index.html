@@ -707,15 +707,30 @@
         
         this.progress = { active: true, phase: 'Initializing', message: 'Starting claim processing...' };
         const form = document.getElementById('claimForm');
-        const formData = new FormData(form);
+        const formData = new FormData();
+        
+        // Add claim JSON (from textarea or text input)
+        const textInput = document.querySelector('input[name="claim_json"]');
+        if (textInput && textInput.value.trim()) {
+            formData.append('claim_json', textInput.value);
+        }
+        
+        // Add file if selected
+        const claimFileInput = this.$refs.claimFileInput;
+        const documentFileInput = this.$refs.documentFileInput;
+        
+        if (claimFileInput && claimFileInput.files && claimFileInput.files.length > 0) {
+            formData.append('claim_file', claimFileInput.files[0]);
+        }
+        if (documentFileInput && documentFileInput.files && documentFileInput.files.length > 0) {
+            formData.append('claim_file', documentFileInput.files[0]);
+        }
         
         // Clear inputs
         this.messageInput = '';
         this.fileName = '';
         this.claimFileName = '';
         this.documentFileName = '';
-        const claimFileInput = this.$refs.claimFileInput;
-        const documentFileInput = this.$refs.documentFileInput;
         if (claimFileInput) claimFileInput.value = '';
         if (documentFileInput) documentFileInput.value = '';
         

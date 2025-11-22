@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from .dependencies import runtime_lifespan
-from .routers import claims, ui
+from .routers import claims, ui, customer_service
 
 app = FastAPI(
     title="Claims Orchestration API",
@@ -15,6 +15,7 @@ app = FastAPI(
 
 app.include_router(ui.router)
 app.include_router(claims.router)
+app.include_router(customer_service.router)
 
 
 @app.get("/healthz", tags=["system"])

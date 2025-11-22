@@ -27,6 +27,12 @@ templates = Jinja2Templates(directory=str(_TEMPLATE_DIR))
 router = APIRouter(tags=["ui"], include_in_schema=False)
 
 
+@router.get("/chat", response_class=HTMLResponse)
+async def chat_ui(request: Request):
+    """Serve the customer service chat UI."""
+    return templates.TemplateResponse("chat.html", {"request": request})
+
+
 def _load_sample_claim() -> str:
     try:
         return _SAMPLE_PATH.read_text(encoding="utf-8")
@@ -66,11 +72,8 @@ def _build_status_summary(result: dict | None) -> dict | None:
 
 @router.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    sample_claim = _load_sample_claim()
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "sample_claim": sample_claim},
-    )
+    """Serve the conversational chat UI by default."""
+    return templates.TemplateResponse("chat.html", {"request": request})
 
 
 @router.get("/ui/sample", response_class=HTMLResponse)
@@ -83,23 +86,33 @@ async def load_sample_textarea():
 
 
 @router.post("/ui/process-stream")
-async def process_via_ui_stream(
-    request: Request,
-    orchestrator=Depends(get_orchestrator),
-    claim_json: str | None = Form(default=None),
-    claim_file: UploadFile | None = File(default=None),
-):
+async def process_via_ui_stream(request: Request, orchestrator=Depends(get_orchestrator)):
     """Stream orchestration progress via Server-Sent Events."""
-    # Handle file upload or text input
-    if claim_file and claim_file.filename:
-        try:
-            content = await claim_file.read()
-            if content:
-                claim_json = content.decode('utf-8')
-        except Exception as exc:
-            return JSONResponse({"error": f"Could not read file: {exc}"}, status_code=400)
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    # Parse multipart form data manually to handle optional fields
+    claim_json = None
+    try:
+        form = await request.form()
+        claim_json_raw = form.get("claim_json")
+        claim_json = claim_json_raw.strip() if claim_json_raw and isinstance(claim_json_raw, str) else None
+        claim_file = form.get("claim_file")
+        
+        if claim_file and hasattr(claim_file, 'filename') and claim_file.filename:
+            try:
+                content = await claim_file.read()
+                if content:
+                    claim_json = content.decode('utf-8')
+            except Exception as exc:
+                logger.error(f"File read error: {exc}")
+                return JSONResponse({"error": f"Could not read file: {exc}"}, status_code=400)
+    except Exception as exc:
+        logger.error(f"Form parsing error: {exc}", exc_info=True)
+        return JSONResponse({"error": f"Form parsing error: {str(exc)}"}, status_code=400)
     
     if not claim_json or not claim_json.strip():
+        logger.warning("No claim data provided")
         return JSONResponse({"error": "Please provide a claim JSON or upload a file"}, status_code=400)
     
     # Try to parse as JSON first, if it fails treat as natural language
@@ -107,9 +120,10 @@ async def process_via_ui_stream(
         normalized_claim = json.loads(claim_json)
     except json.JSONDecodeError:
         try:
-            source_hint = Path(claim_file.filename) if claim_file and claim_file.filename else None
+            source_hint = None  # No filename available from raw form parsing
             normalized_claim = parse_freeform_claim(claim_json, source_hint)
         except ValueError as exc:
+            logger.error(f"Parsing error: {exc}")
             return JSONResponse({"error": str(exc)}, status_code=400)
 
     async def event_generator() -> AsyncGenerator[str, None]:
@@ -180,14 +194,28 @@ async def process_via_ui_stream(
             orchestrator._phase2_magentic_gathering = phase2_wrapper
             orchestrator._phase3_handoff_decision = phase3_wrapper
             
-            # Start background task
+            # Start background task with timeout
             task = asyncio.create_task(orchestrator.process_claim(normalized_claim))
             
             # Track if we've already notified about missing docs
             notified_missing_docs = False
+            start_time = asyncio.get_event_loop().time()
+            max_processing_time = 300  # 5 minute timeout for claim processing
             
             # Stream events as they arrive
             while not task.done():
+                # Check for timeout
+                elapsed = asyncio.get_event_loop().time() - start_time
+                if elapsed > max_processing_time:
+                    logger.warning("Claim processing timeout after %.1fs for claim %s", elapsed, normalized_claim.get("claim_id", "unknown"))
+                    task.cancel()
+                    try:
+                        await task
+                    except asyncio.CancelledError:
+                        pass
+                    yield f"data: {json.dumps({'type': 'timeout', 'message': 'Claim processing exceeded 5 minute timeout'})}\n\n"
+                    return
+                
                 if progress_callback.events:
                     for event in progress_callback.events:
                         yield f"data: {json.dumps(event)}\n\n"
@@ -209,7 +237,22 @@ async def process_via_ui_stream(
                 await asyncio.sleep(0.1)  # Reduced from 0.5 for faster response
             
             # Get final result
-            result = await task
+            try:
+                result = await asyncio.wait_for(task, timeout=5.0)
+            except asyncio.TimeoutError:
+                logger.error("Final result timeout for claim %s", normalized_claim.get("claim_id", "unknown"))
+                yield f"data: {json.dumps({'type': 'error', 'message': 'Timeout waiting for claim processing result'})}\n\n"
+                return
+            except Exception as e:
+                logger.error("Task failed for claim %s: %s", normalized_claim.get("claim_id", "unknown"), str(e), exc_info=True)
+                yield f"data: {json.dumps({'type': 'error', 'message': f'Claim processing error: {str(e)}'})}\n\n"
+                return
+            
+            # Flush any remaining events from the phase wrappers
+            if progress_callback.events:
+                for event in progress_callback.events:
+                    yield f"data: {json.dumps(event)}\n\n"
+                progress_callback.events.clear()
             
             # Check for missing documents in final result
             if not notified_missing_docs:

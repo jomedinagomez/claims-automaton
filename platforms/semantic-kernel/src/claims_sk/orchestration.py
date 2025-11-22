@@ -144,17 +144,7 @@ class ClaimsOrchestrator:
         try:
             await self._phase1_sequential_intake(context, chat_history)
             
-            # Save session after Phase 1 if paused
-            if self._should_pause(context):
-                await self._save_session_snapshot(claim_id, chat_history, context, "paused_after_phase1")
-                result = self._create_paused_result(context, chat_history)
-                logger.info(
-                    "Claims orchestration paused for claim_id=%s, missing_documents=%d",
-                    claim_id,
-                    len(context.get("missing_documents", [])),
-                )
-                return result
-            
+            # Only proceed to Phase 2 if we have all required data
             if not self.manager.should_terminate(context):
                 await self._phase2_magentic_gathering(context, chat_history)
             
@@ -322,14 +312,6 @@ class ClaimsOrchestrator:
                     )
             
             self.manager.record_round()
-            
-            if self.enable_human_in_loop and context.get("missing_documents"):
-                logger.info(
-                    "Pausing for human input: claim_id=%s missing=%s",
-                    context["claim_id"],
-                    context["missing_documents"],
-                )
-                break
         
         context["state"] = "data_gathering_complete"
         logger.info(

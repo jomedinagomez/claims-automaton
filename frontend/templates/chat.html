@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+.processing-claim strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.document-buckets {
+
+        .header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            .processing-claim {
+                background: #fef3c7;
+                border-left: 4px solid #f59e0b;
+                padding: 16px;
+                margin: 16px 0;
+                border-radius: 8px;
+                font-size: 14px;
+                color: #92400e;
+            }
+
+            .processing-claim strong {
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .document-buckets {
+            background: #667eea;
+            color: white;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e0;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .input-area {
+            padding: 20px 24px;
+            border-top: 1px solid #e2e8f0;
+            background: #f7f9fc;
+        }
+            overflow-y: auto;
+            const context = result.context || {};
+            const missingDocs = result.missing_documents || context.missing_documents || payload.missing_documents || [];
+            if (missingDocs.length) {
+                showMissingDocuments(missingDocs);
+            } else {
+                hideMissingDocuments();
+            }
+
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a5568;
+        }
+
+        .claim-field {
+            padding: 4px 0;
+            color: #718096;
+        }
+
+        .claim-field strong {
+            color: #2d3748;
+            margin-right: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #667eea;
+        }
+
+        .input-group button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .input-group button:hover {
+            background: #5a67d8;
+        }
+
+        .input-group button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .welcome h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .processing-claim {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .processing-claim strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        async function uploadDocument() {
+            ensureClaimId();
+            const fileInput = document.getElementById('documentFile');
+            const uploadButton = document.getElementById('uploadButton');
+
+            const file = fileInput.files[0];
+            if (!file) {
+                setDocumentStatus('Please choose a file to upload.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('claim_id', claimDraft.claim_id);
+            formData.append('file', file);
+
+            setDocumentStatus('Uploading document...');
+            uploadButton.disabled = true;
+
+            try {
+                const response = await fetch('/customer-service/documents/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => ({}));
+                    throw new Error(errorBody.detail || 'Upload failed');
+                }
+
+                const data = await response.json();
+                const category = determineDocumentCategory(data.type);
+                claimDraft.documents = claimDraft.documents || [];
+                claimDraft.documents.push({
+                    type: data.type,
+                    filename: data.filename,
+                    relative_path: data.relative_path,
+                    absolute_path: data.absolute_path,
+                    size: data.size,
+                    uploaded_at: new Date().toISOString(),
+                    category,
+                });
+
+                fileInput.value = '';
+                const classificationLabel = (data.type || 'document').replace(/_/g, ' ');
+                if (data.extracted_claim) {
+                    mergeExtractedClaimData(data.extracted_claim);
+                    setDocumentStatus(`Uploaded ${data.filename} • captured policy data`, 'success');
+                    addMessage('📄 I extracted details from your document so we can keep moving.');
+                } else {
+                    setDocumentStatus(`Uploaded ${data.filename} (${classificationLabel})`, 'success');
+                }
+                renderDocumentBuckets();
+                updateClaimDisplay();
+                if (category === 'submission') {
+                    autoSubmitRequested = true;
+                }
+                maybeAutoSubmit('document');
+            } catch (error) {
+                setDocumentStatus(error.message, 'error');
+            } finally {
+                uploadButton.disabled = false;
+            }
+        }
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .document-bucket {
+            border: 1px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 12px;
+            background: #f8fafc;
+        }
+
+        .bucket-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #4a5568;
+        }
+
+        .bucket-count {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .document-item {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        .document-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .doc-chip {
+            background: #edf2f7;
+            border-radius: 999px;
+            padding: 2px 10px;
+            font-size: 11px;
+            text-transform: capitalize;
+        }
+
+        .document-item button {
+            background: transparent;
+            border: none;
+            color: #e53e3e;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .document-item button:disabled {
+            color: #a0aec0;
+            cursor: default;
+        }
+
+        .empty-state {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .missing-docs {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            color: #822727;
+            font-size: 14px;
+        }
+
+        .missing-docs ul {
+            margin: 8px 0 12px;
+            padding-left: 20px;
+        }
+
+        .missing-docs button {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background: #c53030;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Claims Customer Service</h1>
+            <p>Let me help you submit your insurance claim</p>
+        </div>
+
+        <div class="chat-layout">
+            <div class="chat-column">
+                <div class="messages" id="messages">
+                    <div class="welcome">
+                        <h2>👋 Welcome!</h2>
+                        <p>I'm here to help you file an insurance claim. Just tell me what happened and I'll guide you through the process.</p>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div id="claim-data-display" style="display: none;" class="claim-data-display">
+                        <h4>📋 Claim Information Collected:</h4>
+                        <div id="claim-fields"></div>
+                    </div>
+
+                    <div id="processing-notice" style="display: none;" class="processing-claim">
+                        <strong>✅ Processing your claim...</strong>
+                        Your claim has been submitted to our specialist team. Please wait while we review it.
+                    </div>
+
+                    <div id="missing-documents-panel" class="missing-docs" style="display: none;"></div>
+
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Type your message here..." 
+                            autocomplete="off"
+                            onkeypress="if(event.key==='Enter') sendMessage()"
+                        />
+                        <button id="sendButton" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="docs-column">
+                <div class="document-uploader">
+                    <h4>📎 Documents</h4>
+                    <p>Upload claim submissions or supporting evidence. We'll classify them automatically.</p>
+                    <div class="document-controls">
+                        <input type="file" id="documentFile" />
+                        <button id="uploadButton" type="button" onclick="uploadDocument()">Upload</button>
+                    </div>
+                    <div id="document-status" class="document-status"></div>
+
+                    <div class="document-buckets">
+                        <div class="document-bucket">
+                            <div class="bucket-header">
+                                <span>Claim Submission</span>
+                                <span id="submission-count" class="bucket-count">0</span>
+                            </div>
+                            <div id="submission-doc-list" class="document-list"></div>
+                        </div>
+                        <div class="document-bucket">
+                            <div class="bucket-header">
+                                <span>Supporting Documents</span>
+                                <span id="supporting-count" class="bucket-count">0</span>
+                            </div>
+                            <div id="supporting-doc-list" class="document-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // Store claim data being collected
+        let claimDraft = { documents: [] };
+        let isProcessing = false;
+        let conversationLog = [];
+        let submittedDocumentPaths = new Set();
+        let activeClaimId = null;
+        let autoSubmitRequested = false;
+        let submissionInFlight = false;
+        let claimSubmitted = false;
+        const submissionDocTypes = new Set(['claim_request', 'claim_submission', 'claim_email', 'claim_form', 'claim_statement']);
+
+        function ensureClaimId() {
+            if (!claimDraft.claim_id) {
+                const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 12);
+                const random = Math.floor(Math.random() * 900) + 100;
+                claimDraft.claim_id = `CLM-${timestamp}${random}`;
+            }
+            return claimDraft.claim_id;
+        }
+
+        function addMessage(content, isUser = false) {
+            ensureClaimId();
+            const messagesDiv = document.getElementById('messages');
+            
+            // Remove welcome message if present
+            const welcome = messagesDiv.querySelector('.welcome');
+            if (welcome) {
+                welcome.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            if (isUser) {
+                conversationLog.push(content);
+                if (!claimDraft.incident_description) {
+                    claimDraft.incident_description = content;
+                }
+            }
+        }
+
+        function showTyping() {
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.id = 'typing-indicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = '🤖';
+            
+            const typing = document.createElement('div');
+            typing.className = 'message-content';
+            typing.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(typing);
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) {
+                typing.remove();
+            }
+        }
+
+        function updateClaimDisplay() {
+            const display = document.getElementById('claim-data-display');
+            const fieldsDiv = document.getElementById('claim-fields');
+            ensureClaimId();
+
+            display.style.display = 'block';
+            fieldsDiv.innerHTML = '';
+
+            const seen = new Set();
+            const entries = Object.entries(claimDraft).filter(([key]) => key !== 'documents');
+            entries.unshift(['claim_id', claimDraft.claim_id]);
+
+            for (const [key, value] of entries) {
+                if (seen.has(key) || value === undefined || value === null) {
+                    continue;
+                }
+                if (typeof value === 'object') {
+                    continue;
+                }
+                seen.add(key);
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'claim-field';
+                fieldDiv.innerHTML = `<strong>${key}:</strong> ${value}`;
+                fieldsDiv.appendChild(fieldDiv);
+            }
+        }
+
+        function mergeExtractedClaimData(summary) {
+            if (!summary) {
+                return;
+            }
+
+            const fieldMap = {
+                policy_number: 'policy_number',
+                claimant_name: 'claimant_name',
+                contact_email: 'contact_email',
+                contact_phone: 'contact_phone',
+                incident_date: 'incident_date',
+                incident_location: 'incident_location',
+            };
+
+            Object.entries(fieldMap).forEach(([draftField, summaryKey]) => {
+                if (!claimDraft[draftField] && summary[summaryKey]) {
+                    claimDraft[draftField] = summary[summaryKey];
+                }
+            });
+
+            if (!claimDraft.incident_description && summary.incident_description) {
+                claimDraft.incident_description = summary.incident_description;
+            }
+
+            if (!claimDraft.original_content && summary.original_content) {
+                claimDraft.original_content = summary.original_content;
+            }
+        }
+
+        function determineDocumentCategory(docType) {
+            const normalized = (docType || '').toLowerCase();
+            return submissionDocTypes.has(normalized) ? 'submission' : 'supporting';
+        }
+
+        function renderDocumentBuckets() {
+            const submissionContainer = document.getElementById('submission-doc-list');
+            const supportingContainer = document.getElementById('supporting-doc-list');
+            const submissionCount = document.getElementById('submission-count');
+            const supportingCount = document.getElementById('supporting-count');
+
+            const grouped = { submission: [], supporting: [] };
+            (claimDraft.documents || []).forEach((doc, index) => {
+                const category = doc.category || determineDocumentCategory(doc.type);
+                grouped[category].push({ ...doc, index });
+            });
+
+            submissionCount.textContent = grouped.submission.length;
+            supportingCount.textContent = grouped.supporting.length;
+
+            const renderList = (container, docs, emptyMessage) => {
+                if (!docs.length) {
+                    container.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
+                    return;
+                }
+
+                container.innerHTML = '';
+                docs.forEach((doc) => {
+                    const item = document.createElement('div');
+                    item.className = 'document-item';
+
+                    const header = document.createElement('div');
+                    header.className = 'document-item-header';
+
+                    const title = document.createElement('div');
+                    title.innerHTML = `<strong>${doc.filename || 'unnamed file'}</strong><br/><small>${formatBytes(doc.size) || ''}</small>`;
+
+                    const chip = document.createElement('span');
+                    chip.className = 'doc-chip';
+                    chip.textContent = (doc.type || 'document').replace(/_/g, ' ');
+
+                    header.appendChild(title);
+                    header.appendChild(chip);
+                    item.appendChild(header);
+
+                    const actionRow = document.createElement('div');
+                    const button = document.createElement('button');
+                    const alreadySubmitted = doc.relative_path && submittedDocumentPaths.has(doc.relative_path);
+                    button.textContent = alreadySubmitted ? 'Submitted' : 'Remove';
+                    button.disabled = alreadySubmitted;
+                    button.onclick = () => removeDocument(doc.index);
+                    actionRow.appendChild(button);
+                    item.appendChild(actionRow);
+
+                    container.appendChild(item);
+                });
+            };
+
+            renderList(submissionContainer, grouped.submission, 'No claim submission uploaded yet.');
+            renderList(supportingContainer, grouped.supporting, 'Add police reports, estimates, or photos here.');
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes) return '';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            const index = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+            const value = bytes / Math.pow(1024, index);
+            return `${value.toFixed(value > 9 ? 0 : 1)} ${units[index]}`;
+        }
+
+        function removeDocument(index) {
+            if (!claimDraft.documents || index < 0 || index >= claimDraft.documents.length) {
+                return;
+            }
+            const doc = claimDraft.documents[index];
+            if (doc && doc.relative_path && submittedDocumentPaths.has(doc.relative_path)) {
+                return; // keep audit trail for submitted docs
+            }
+            claimDraft.documents.splice(index, 1);
+            renderDocumentBuckets();
+            updateClaimDisplay();
+        }
+
+        function setDocumentStatus(message, variant = 'info') {
+            const statusDiv = document.getElementById('document-status');
+            statusDiv.textContent = message || '';
+            if (variant === 'error') {
+                statusDiv.style.color = '#c53030';
+            } else if (variant === 'success') {
+                statusDiv.style.color = '#047857';
+            } else {
+                statusDiv.style.color = '#4a5568';
+            }
+        }
+
+        async function uploadDocument() {
+            ensureClaimId();
+            const fileInput = document.getElementById('documentFile');
+            const uploadButton = document.getElementById('uploadButton');
+
+            const file = fileInput.files[0];
+            if (!file) {
+                setDocumentStatus('Please choose a file to upload.', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('claim_id', claimDraft.claim_id);
+            formData.append('file', file);
+
+            setDocumentStatus('Uploading document...');
+            uploadButton.disabled = true;
+
+            try {
+                const response = await fetch('/customer-service/documents/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => ({}));
+                    throw new Error(errorBody.detail || 'Upload failed');
+                }
+
+                const data = await response.json();
+                claimDraft.documents = claimDraft.documents || [];
+                claimDraft.documents.push({
+                    type: data.type,
+                    filename: data.filename,
+                    relative_path: data.relative_path,
+                    absolute_path: data.absolute_path,
+                    size: data.size,
+                    uploaded_at: new Date().toISOString(),
+                    category: determineDocumentCategory(data.type),
+                });
+
+                fileInput.value = '';
+                customInput.value = '';
+                typeSelect.value = '';
+                handleDocumentTypeChange();
+                if (data.extracted_claim) {
+                    mergeExtractedClaimData(data.extracted_claim);
+                    setDocumentStatus(`Uploaded ${data.filename} • captured policy data`, 'success');
+                    addMessage('📄 I extracted details from your document so we can keep moving.');
+                } else {
+                    setDocumentStatus(`Uploaded ${data.filename}`, 'success');
+                }
+                renderDocumentBuckets();
+                updateClaimDisplay();
+            } catch (error) {
+                setDocumentStatus(error.message, 'error');
+            } finally {
+                uploadButton.disabled = false;
+            }
+        }
+
+        function showMissingDocuments(documents) {
+            const panel = document.getElementById('missing-documents-panel');
+            if (!documents || documents.length === 0) {
+                panel.style.display = 'none';
+                panel.innerHTML = '';
+                return;
+            }
+
+            const listItems = documents.map((doc) => `<li>${doc}</li>`).join('');
+            panel.innerHTML = `
+                <strong>Additional documents required</strong>
+                <p>Please upload the following items so we can continue processing your claim:</p>
+                <ul>${listItems}</ul>
+                <button type="button" onclick="resumeClaim()">Send newly uploaded documents</button>
+            `;
+            panel.style.display = 'block';
+        }
+
+        function hideMissingDocuments() {
+            const panel = document.getElementById('missing-documents-panel');
+            panel.style.display = 'none';
+            panel.innerHTML = '';
+        }
+
+        function buildClaimPayload() {
+            ensureClaimId();
+            const documents = (claimDraft.documents || [])
+                .map((doc) => doc.relative_path)
+                .filter(Boolean);
+
+            const transcript = conversationLog.join('\n\n');
+            const claimantName = claimDraft.claimant_name || claimDraft.customer_name || 'Chat Customer';
+            const incidentDescription = claimDraft.incident_description || transcript || 'Claim described via chat conversation.';
+            const originalContent = claimDraft.original_content || transcript;
+
+            return {
+                claim: {
+                    claim_id: claimDraft.claim_id,
+                    policy_number: claimDraft.policy_number || 'UNKNOWN',
+                    claimant_name: claimantName,
+                    contact_email: claimDraft.contact_email || 'unknown@example.com',
+                    contact_phone: claimDraft.contact_phone || claimDraft.phone || '',
+                    incident_date: claimDraft.incident_date || '',
+                    incident_location: claimDraft.incident_location || 'Not specified',
+                    incident_type: claimDraft.incident_type || '',
+                    incident_description: incidentDescription,
+                    total_claim_amount: claimDraft.total_claim_amount || '',
+                    documents,
+                    submission_method: 'chat-ui',
+                    original_content: originalContent,
+                                    const category = determineDocumentCategory(data.type);
+                    metadata: {
+                        vehicle_info: claimDraft.vehicle_info || '',
+                        injuries: claimDraft.injuries_occurred || '',
+                        other_party: claimDraft.other_party_involved || '',
+                    },
+                },
+            };
+                                        category,
+        }
+
+        function handleClaimResult(result) {
+                                    const classificationLabel = (data.type || 'document').replace(/_/g, ' ');
+                                    if (data.extracted_claim) {
+                                        mergeExtractedClaimData(data.extracted_claim);
+                                        setDocumentStatus(`Uploaded ${data.filename} • captured policy data`, 'success');
+                                        addMessage('📄 I extracted details from your document so we can keep moving.');
+                                    } else {
+                                        setDocumentStatus(`Uploaded ${data.filename} (${classificationLabel})`, 'success');
+                                    }
+                                    renderDocumentBuckets();
+            const payload = result.handoff_payload || {};
+                                    if (category === 'submission') {
+                                        autoSubmitRequested = true;
+                                    }
+                                    maybeAutoSubmit('document');
+            const status = result.status || 'unknown';
+
+            if (status === 'approved') {
+                const amount = payload.amount || payload.payout_amount || 'the approved amount';
+                addMessage(`✅ <strong>Approved!</strong> Your claim is ready for settlement for ${amount}. ${payload.notes || payload.rationale || ''}`);
+            } else if (status === 'denied') {
+                addMessage(`❌ <strong>Claim Denied:</strong> ${payload.notes || payload.rationale || 'The claim did not pass review.'}`);
+            } else if (status === 'paused') {
+                addMessage('⏸️ We need a bit more documentation to keep going. Upload the files listed above and click the button to continue.');
+            } else if (status !== 'approved') {
+                addMessage(`ℹ️ Claim update: ${status}. ${payload.notes || ''}`);
+            }
+        }
+
+        async function resumeClaim() {
+            ensureClaimId();
+            if (!activeClaimId) {
+                addMessage('ℹ️ Start a submission first so we know which claim to resume.');
+                return;
+            }
+
+            const pendingDocs = (claimDraft.documents || []).filter((doc) => doc.relative_path && !submittedDocumentPaths.has(doc.relative_path));
+            const documentPayload = pendingDocs
+                .filter((doc) => doc.absolute_path)
+                .map((doc) => ({
+                    type: doc.type || 'supporting_document',
+                    filename: doc.filename,
+                    path: doc.absolute_path,
+                }));
+
+            if (documentPayload.length === 0) {
+                addMessage('📎 Upload new supporting documents before resuming.');
+                return;
+            }
+
+            document.getElementById('processing-notice').style.display = 'block';
+            try {
+                const response = await fetch(`/claims/${encodeURIComponent(activeClaimId)}/resume`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ documents: documentPayload }),
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => ({}));
+                    throw new Error(errorBody.detail || 'Unable to resume claim');
+                }
+
+                const result = await response.json();
+                if (result?.context?.claim_id) {
+                    activeClaimId = result.context.claim_id;
+                }
+                pendingDocs.forEach((doc) => {
+                    if (doc.relative_path) {
+                        submittedDocumentPaths.add(doc.relative_path);
+                    }
+                });
+                renderDocumentBuckets();
+                handleClaimResult(result);
+            } catch (error) {
+                addMessage(`❌ Error resuming claim: ${error.message}`);
+            } finally {
+                document.getElementById('processing-notice').style.display = 'none';
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = input.value.trim();
+
+            if (!message || isProcessing) return;
+
+            // Add user message to chat
+            addMessage(message, true);
+            input.value = '';
+
+            // Disable input during processing
+            isProcessing = true;
+            input.disabled = true;
+            sendButton.disabled = true;
+
+            showTyping();
+
+            try {
+                const response = await fetch('/customer-service/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        claim_draft: claimDraft
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get response from server');
+                }
+
+                hideTyping();
+
+                // Read SSE stream
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let assistantMessage = '';
+                let shouldSubmit = false;
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+
+                                if (data.type === 'chunk') {
+                                    assistantMessage += data.content;
+                                } else if (data.type === 'ready') {
+                                    shouldSubmit = true;
+                                } else if (data.type === 'done') {
+                                    // Display the complete message
+                                    if (assistantMessage) {
+                                        addMessage(assistantMessage);
+                                    }
+
+                                    // If agent said to submit, trigger orchestration
+                                    if (shouldSubmit) {
+                                        await submitToOrchestration();
+                                    }
+                                } else if (data.type === 'error') {
+                                    throw new Error(data.message);
+                                }
+                            } catch (e) {
+                                console.error('Error parsing SSE:', e);
+                            }
+                        }
+                    }
+                }
+
+                // Try to extract claim data from message
+                // (In a real implementation, you'd have a more robust way to do this)
+                tryExtractClaimData(message);
+                updateClaimDisplay();
+
+            } catch (error) {
+                hideTyping();
+                addMessage(`❌ Error: ${error.message}`);
+            } finally {
+                isProcessing = false;
+                input.disabled = false;
+                sendButton.disabled = false;
+                input.focus();
+            }
+        }
+
+        async function submitToOrchestration() {
+            // Show processing notice
+            document.getElementById('processing-notice').style.display = 'block';
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendButton').disabled = true;
+
+            addMessage('🚀 Submitting your claim to our specialist team for review...');
+
+            try {
+                const payload = buildClaimPayload();
+                activeClaimId = payload.claim.claim_id;
+
+                const response = await fetch('/claims/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit claim');
+                }
+
+                const result = await response.json();
+                if (result?.context?.claim_id) {
+                    activeClaimId = result.context.claim_id;
+                }
+
+                (claimDraft.documents || []).forEach((doc) => {
+                    if (doc.relative_path) {
+                        submittedDocumentPaths.add(doc.relative_path);
+                    }
+                });
+                renderDocumentBuckets();
+
+                handleClaimResult(result);
+
+            } catch (error) {
+                addMessage(`❌ Error submitting claim: ${error.message}`);
+            } finally {
+                document.getElementById('processing-notice').style.display = 'none';
+            }
+        }
+
+        function tryExtractClaimData(message) {
+            const lower = message.toLowerCase();
+
+            // Try to extract policy number
+            const policyMatch = message.match(/\b(POL-\d+|\d{6,})\b/i);
+            if (policyMatch) {
+                claimDraft.policy_number = policyMatch[0];
+            }
+
+            // Try to extract dates
+            const dateMatch = message.match(/\b(\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{4})\b/);
+            if (dateMatch) {
+                claimDraft.incident_date = dateMatch[0];
+            }
+
+            // Try to extract claim types
+            if (lower.includes('auto') || lower.includes('car') || lower.includes('vehicle')) {
+                claimDraft.incident_type = 'auto';
+            } else if (lower.includes('medical') || lower.includes('health') || lower.includes('doctor')) {
+                claimDraft.incident_type = 'medical';
+            } else if (lower.includes('property') || lower.includes('home') || lower.includes('house')) {
+                claimDraft.incident_type = 'property';
+            }
+
+            // Try to extract amounts
+            const amountMatch = message.match(/\$[\d,]+(\.\d{2})?|\b\d+\s*(dollars|usd)\b/i);
+            if (amountMatch) {
+                const amount = amountMatch[0].replace(/[^\d.]/g, '');
+                claimDraft.total_claim_amount = amount;
+            }
+        }
+
+        // Focus input on load
+        window.onload = () => {
+            document.getElementById('messageInput').focus();
+            renderDocumentBuckets();
+        };
+    </script>
+</body>
+</html>

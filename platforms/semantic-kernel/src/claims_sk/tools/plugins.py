@@ -584,11 +584,89 @@ class HandoffTools:
 
 
 # ---------------------------------------------------------------------------
+# Orchestration control tools
+# ---------------------------------------------------------------------------
+
+
+class OrchestrationTools:
+    """Tools for agents to communicate with the orchestrator."""
+
+    def __init__(self, context: Dict[str, Any]) -> None:
+        self.context = context
+
+    @kernel_function(
+        name="request_missing_information",
+        description="Signal that additional information is needed from the customer to proceed with the claim"
+    )
+    async def request_missing_information(self, required_fields: str) -> dict[str, Any]:
+        """
+        Request missing information from the customer.
+        
+        Args:
+            required_fields: Comma-separated list of missing information (e.g., "total_claim_amount, repair_cost_estimate, incident_location")
+        
+        Returns:
+            Confirmation that the request was recorded
+        """
+        fields = [field.strip() for field in required_fields.split(",") if field.strip()]
+        
+        if "missing_information" not in self.context:
+            self.context["missing_information"] = []
+        
+        self.context["missing_information"].extend(fields)
+        
+        logger.info(
+            "Agent requested missing information for claim_id=%s: %s",
+            self.context.get("claim_id"),
+            fields,
+        )
+        
+        return {
+            "status": "information_requested",
+            "fields": fields,
+            "message": f"Customer will be asked to provide: {', '.join(fields)}",
+        }
+
+    @kernel_function(
+        name="request_missing_documents",
+        description="Signal that additional documents are needed from the customer to proceed with the claim"
+    )
+    async def request_missing_documents(self, required_documents: str) -> dict[str, Any]:
+        """
+        Request missing documents from the customer.
+        
+        Args:
+            required_documents: Comma-separated list of missing documents (e.g., "police_report, repair_estimate, medical_records")
+        
+        Returns:
+            Confirmation that the request was recorded
+        """
+        docs = [doc.strip() for doc in required_documents.split(",") if doc.strip()]
+        
+        if "missing_documents" not in self.context:
+            self.context["missing_documents"] = []
+        
+        self.context["missing_documents"].extend(docs)
+        
+        logger.info(
+            "Agent requested missing documents for claim_id=%s: %s",
+            self.context.get("claim_id"),
+            docs,
+        )
+        
+        return {
+            "status": "documents_requested",
+            "documents": docs,
+            "message": f"Customer will be asked to upload: {', '.join(docs)}",
+        }
+
+
+# ---------------------------------------------------------------------------
 # Registry helper
 # ---------------------------------------------------------------------------
 
 
-def build_tool_plugins(repo: SharedDataRepository) -> dict[str, object]:
+def build_tool_plugins(repo: SharedDataRepository, context: Optional[Dict[str, Any]] = None) -> dict[str, object]:
     vendor_tools = VendorTools(repo)
     plugins: dict[str, object] = {
         "PolicyTools": PolicyTools(repo),
@@ -600,4 +678,9 @@ def build_tool_plugins(repo: SharedDataRepository) -> dict[str, object]:
         "DocumentTools": DocumentTools(repo),
         "HandoffTools": HandoffTools(repo),
     }
+    
+    # Add orchestration control tools if context is provided
+    if context is not None:
+        plugins["OrchestrationTools"] = OrchestrationTools(context)
+    
     return plugins

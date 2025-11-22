@@ -1,0 +1,40 @@
+{
+  "state": "data_gathering_complete",
+  "missing_documents": [],
+  "risk_score": 0,
+  "fraud_indicators": [],
+  "assessment_confidence": 0,
+  "agent_decision": null,
+  "decision_confidence": 0,
+  "ack_sent": true,
+  "info_request_sent": false,
+  "sla_breached": false,
+  "agent_reviewed": false,
+  "handoff_status": "pending",
+  "denial_package_ready": false,
+  "claim_id": "CLM-1121194131",
+  "policy_number": "AUTO-789456",
+  "customer": {
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "phone": "410-555-1234"
+  },
+  "incident": {
+    "date": "November",
+    "description": "From: john.smith@example.com\r\nTo: claims@midatlanticinsurance.com\r\nSubject: Claim for car accident yesterday\r\nDate: Monday, November 11, 2025 at 8:15 AM\r\n\r\nHi,\r\n\r\nI need to file a claim for an accident that happened yesterday (Nov 10th) on I-95 North around 1:30pm. I was stopped at a red light near mile marker 42 when someone rear-ended me. It was raining pretty hard.\r\n\r\nMy policy number is AUTO-789456. The car is a 2020 Toyota Camry.\r\n\r\nThe police came and filed a report - I've attached it along with the other paperwork. The other driver got a ticket. There was also a witness who saw everything happen.\r\n\r\nI went to the doctor this morning because my neck has been hurting since the accident. They took x-rays and said it's a cervical strain. I've attached the medical summary.\r\n\r\nI also got an estimate from Honest Auto Body for the damage to my rear bumper and trunk. They said it'll take about 4-5 days to fix. I think they're one of your approved shops?\r\n\r\nI've attached:\r\n- police_report_12345.md (the official police report)\r\n- repair_estimate_001.md (from Honest Auto Body)\r\n- medical_receipt_summary.md (from the orthopedic clinic visit)\r\n- witness_statement.txt (statement from the witness)\r\n\r\nCan you let me know what happens next? I'd like to get the car repaired as soon as possible, and I'll probably need a rental while it's in the shop.\r\n\r\nThanks,\r\nJohn Smith\r\n410-555-1234\r\njohn.smith@example.com",
+    "location": "I-95 North"
+  },
+  "documents": [
+    "police_report_12345.md",
+    "repair_estimate_001.md",
+    "medical_receipt_summary.md",
+    "witness_statement.txt"
+  ],
+  "submission_method": "email",
+  "original_content": "From: john.smith@example.com\r\nTo: claims@midatlanticinsurance.com\r\nSubject: Claim for car accident yesterday\r\nDate: Monday, November 11, 2025 at 8:15 AM\r\n\r\nHi,\r\n\r\nI need to file a claim for an accident that happened yesterday (Nov 10th) on I-95 North around 1:30pm. I was stopped at a red light near mile marker 42 when someone rear-ended me. It was raining pretty hard.\r\n\r\nMy policy number is AUTO-789456. The car is a 2020 Toyota Camry.\r\n\r\nThe police came and filed a report - I've attached it along with the other paperwork. The other driver got a ticket. There was also a witness who saw everything happen.\r\n\r\nI went to the doctor this morning because my neck has been hurting since the accident. They took x-rays and said it's a cervical strain. I've attached the medical summary.\r\n\r\nI also got an estimate from Honest Auto Body for the damage to my rear bumper and trunk. They said it'll take about 4-5 days to fix. I think they're one of your approved shops?\r\n\r\nI've attached:\r\n- police_report_12345.md (the official police report)\r\n- repair_estimate_001.md (from Honest Auto Body)\r\n- medical_receipt_summary.md (from the orthopedic clinic visit)\r\n- witness_statement.txt (statement from the witness)\r\n\r\nCan you let me know what happens next? I'd like to get the car repaired as soon as possible, and I'll probably need a rental while it's in the shop.\r\n\r\nThanks,\r\nJohn Smith\r\n410-555-1234\r\njohn.smith@example.com",
+  "metadata": {
+    "subject": "Claim for car accident yesterday"
+  },
+  "debug_log_path": "output\\agent_traces\\CLM-1121194131_trace.txt",
+  "termination_reason": "max_rounds_exceeded"
+}
